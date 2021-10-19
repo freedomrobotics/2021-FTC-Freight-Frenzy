@@ -51,9 +51,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TankDriveTest", group="Linear Opmode")
+@TeleOp(name="IntakeTank", group="Linear Opmode")
 //@Disabled
-public class TankDriveTest extends LinearOpMode {
+public class IntakeTank extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,11 +71,11 @@ public class TankDriveTest extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFront  = hardwareMap.get(DcMotor.class, "left_front"); // 0
-        leftBack = hardwareMap.get(DcMotor.class, "left_back");// 1
-        rightFront = hardwareMap.get(DcMotor.class, "right_front"); // 2
-        rightBack = hardwareMap.get(DcMotor.class, "right_back"); // 3
-        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor"); // 4
+        leftFront  = hardwareMap.get(DcMotor.class, "leftFront"); // 0
+        leftBack = hardwareMap.get(DcMotor.class, "leftBack");// 1
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // 2
+        rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // 3
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 4
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -123,6 +123,7 @@ public class TankDriveTest extends LinearOpMode {
             leftBack.setPower(leftPower);
             rightFront.setPower(rightPower);
             rightBack.setPower(rightPower);
+            
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
