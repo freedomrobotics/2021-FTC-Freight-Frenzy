@@ -49,16 +49,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TankDrive", group="Linear Opmode")
-@Disabled
-public class TankDrive extends LinearOpMode {
+@TeleOp(name="IntakeOnly", group="Linear Opmode")
+//@Disabled
+public class IntakeOnly extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFront = null;
-    private DcMotor leftBack = null;
-    private DcMotor rightFront = null;
-    private DcMotor rightBack = null;
+    private DcMotor intakeMotor = null;
 
     @Override
     public void runOpMode() {
@@ -68,17 +65,10 @@ public class TankDrive extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFront  = hardwareMap.get(DcMotor.class, "leftFront"); // 0
-        leftBack = hardwareMap.get(DcMotor.class, "leftBack");// 1
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // 2
-        rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // 3
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 0
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -106,17 +96,19 @@ public class TankDrive extends LinearOpMode {
             leftPower  = -gamepad1.left_stick_y ;
             rightPower = -gamepad1.right_stick_y ;
 
+            if (gamepad1.dpad_up) {
+                intakeMotor.setPower(1.0);
+            } else if (gamepad1.dpad_down) {
+                intakeMotor.setPower(-1.0);
+            } else {
+                intakeMotor.setPower(0.0);
+            }
+
             // Send calculated power to wheels
-            leftFront.setPower(leftPower);
-            leftBack.setPower(leftPower);
-            rightFront.setPower(rightPower);
-            rightBack.setPower(rightPower);
             
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            //telemetry.addData("MotorsFront", "left (%.2f), right (%.2f)", leftFront, rightFront);
-            //telemetry.addData("MotorsBack", "left (%.2f), right (%.2f)", leftBack, rightBack);
             telemetry.update();
         }
     }
