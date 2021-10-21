@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="IntakeOnly", group="Linear Opmode")
-//@Disabled
+@Disabled
 public class IntakeOnly extends LinearOpMode {
 
     // Declare OpMode members.

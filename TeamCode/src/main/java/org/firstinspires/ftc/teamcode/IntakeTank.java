@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="IntakeTank", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class IntakeTank extends LinearOpMode {
 
     // Declare OpMode members.
