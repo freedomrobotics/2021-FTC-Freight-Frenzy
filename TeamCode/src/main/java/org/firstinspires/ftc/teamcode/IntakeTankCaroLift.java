@@ -113,18 +113,18 @@ public class IntakeTankCaroLift extends LinearOpMode {
 
             //intake
             if (gamepad1.right_trigger != 0) {
-                intakeMotor.setPower(1.0);
-            } else if (gamepad1.left_trigger != 0) {
                 intakeMotor.setPower(-1.0);
+            } else if (gamepad1.left_trigger != 0) {
+                intakeMotor.setPower(1.0);
             } else {
                 intakeMotor.setPower(0.0);
             }
 
             //carousel
             if (gamepad1.right_bumper) {
-                caroMotor.setPower(1.0);
-            } else if (gamepad1.left_bumper) {
                 caroMotor.setPower(-1.0);
+            } else if (gamepad1.left_bumper) {
+                caroMotor.setPower(1.0);
             } else {
                 caroMotor.setPower(0.0);
             }
