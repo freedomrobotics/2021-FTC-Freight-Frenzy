@@ -31,11 +31,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -51,9 +48,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="IntakeTank", group="Linear Opmode")
-@Disabled
-public class IntakeTank extends LinearOpMode {
+@TeleOp(name="IntakeTankCaroLift", group="Linear Opmode")
+//@Disabled
+public class IntakeTankCaroLift extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -62,6 +59,8 @@ public class IntakeTank extends LinearOpMode {
     private DcMotor rightFront = null;
     private DcMotor rightBack = null;
     private DcMotor intakeMotor = null;
+    private DcMotor caroMotor = null;
+    private DcMotor liftMotor = null;
 
     @Override
     public void runOpMode() {
@@ -76,6 +75,8 @@ public class IntakeTank extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // 2
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // 3
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 4
+        caroMotor = hardwareMap.get(DcMotor.class, "caroMotor"); // 5
+        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor"); // 6
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -110,12 +111,31 @@ public class IntakeTank extends LinearOpMode {
             leftPower  = -gamepad1.left_stick_y ;
             rightPower = -gamepad1.right_stick_y ;
 
-            if (gamepad1.dpad_up) {
+            //intake
+            if (gamepad1.right_trigger != 0) {
                 intakeMotor.setPower(1.0);
-            } else if (gamepad1.dpad_down) {
+            } else if (gamepad1.left_trigger != 0) {
                 intakeMotor.setPower(-1.0);
             } else {
                 intakeMotor.setPower(0.0);
+            }
+
+            //carousel
+            if (gamepad1.right_bumper) {
+                caroMotor.setPower(1.0);
+            } else if (gamepad1.left_bumper) {
+                caroMotor.setPower(-1.0);
+            } else {
+                caroMotor.setPower(0.0);
+            }
+
+            //lift
+            if (gamepad1.dpad_up) {
+                liftMotor.setPower(1.0);
+            } else if (gamepad1.dpad_down) {
+                liftMotor.setPower(-1.0);
+            } else {
+                liftMotor.setPower(0.0);
             }
 
             // Send calculated power to wheels
