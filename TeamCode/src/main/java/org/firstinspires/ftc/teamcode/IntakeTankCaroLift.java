@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -61,6 +62,7 @@ public class IntakeTankCaroLift extends LinearOpMode {
     private DcMotor intakeMotor = null;
     private DcMotor caroMotor = null;
     private DcMotor liftMotor = null;
+    private Servo pushServo = null;
 
     @Override
     public void runOpMode() {
@@ -70,13 +72,20 @@ public class IntakeTankCaroLift extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+
+        //control
         leftFront  = hardwareMap.get(DcMotor.class, "leftFront"); // 0
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");// 1
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // 2
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // 3
-        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 4
-        caroMotor = hardwareMap.get(DcMotor.class, "caroMotor"); // 5
-        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor"); // 6
+        //servos
+        pushServo = hardwareMap.get(Servo.class, "pushServo"); // 0
+
+        //expansion
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 0
+        caroMotor = hardwareMap.get(DcMotor.class, "caroMotor"); // 1
+        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor"); // 2
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -137,6 +146,14 @@ public class IntakeTankCaroLift extends LinearOpMode {
             } else {
                 liftMotor.setPower(0.0);
             }
+
+            //push
+            if (gamepad1.a) {
+                pushServo.setPosition(1.0);
+            } else {
+                pushServo.setPosition(0.0);
+            }
+
 
             // Send calculated power to wheels
             leftFront.setPower(leftPower);
