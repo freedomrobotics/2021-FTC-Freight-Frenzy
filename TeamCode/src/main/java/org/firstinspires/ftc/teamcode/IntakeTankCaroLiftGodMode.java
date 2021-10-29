@@ -50,9 +50,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="IntakeTankCaroLift", group="Linear Opmode")
-@Disabled
-public class IntakeTankCaroLift extends LinearOpMode {
+@TeleOp(name="IntakeTankCaroLiftGodMode", group="Linear Opmode")
+//@Disabled
+public class IntakeTankCaroLiftGodMode extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -86,6 +86,7 @@ public class IntakeTankCaroLift extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 0
         caroMotor = hardwareMap.get(DcMotor.class, "caroMotor"); // 1
         liftMotor = hardwareMap.get(DcMotor.class, "liftMotor"); // 2
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -122,34 +123,57 @@ public class IntakeTankCaroLift extends LinearOpMode {
             rightPower = -gamepad1.right_stick_y ;
 
             //intake
-            if (gamepad2.right_trigger != 0) {
+            if (gamepad1.right_trigger != 0) {
                 intakeMotor.setPower(-1.0);
-            } else if (gamepad2.left_trigger != 0) {
+            } else if (gamepad1.left_trigger != 0) {
                 intakeMotor.setPower(1.0);
             } else {
                 intakeMotor.setPower(0.0);
             }
 
             //carousel
-            if (gamepad2.right_bumper) {
+            if (gamepad1.right_bumper) {
                 caroMotor.setPower(-1.0);
-            } else if (gamepad2.left_bumper) {
+            } else if (gamepad1.left_bumper) {
                 caroMotor.setPower(1.0);
             } else {
                 caroMotor.setPower(0.0);
             }
 
             //lift
-            if (gamepad1.dpad_up) {
+            int liftMotorTracker = 0; //14700, 11200
+            //if at the starting position and up is pressed, goto level 2
+            if (gamepad1.dpad_up && liftMotorTracker == 0) {
                 liftMotor.setPower(1.0);
-            } else if (gamepad1.dpad_down) {
-                liftMotor.setPower(-1.0);
-            } else {
+                liftMotor.setTargetPosition(11200);
                 liftMotor.setPower(0.0);
+                liftMotorTracker++;
+            }
+            //if at level 2 and up is pressed, goto level 3
+            else if (gamepad1.dpad_up && liftMotorTracker == 1) {
+                liftMotor.setPower(1.0);
+                liftMotor.setTargetPosition(14700);
+                liftMotor.setPower(0.0);
+                liftMotorTracker++;
+            }
+            //if at 3 and down is pressed, goto level 2
+            else if (gamepad1.dpad_down && liftMotorTracker == 2) {
+                liftMotor.setPower(1.0);
+                liftMotor.setTargetPosition(11200);
+                liftMotor.setPower(0.0);
+                liftMotorTracker--;
+            }
+            //if at 2 and down is pressed, goto starting position
+            else if (gamepad1.dpad_down && liftMotorTracker == 1) {
+                liftMotor.setPower(1.0);
+                liftMotor.setTargetPosition(0);
+                liftMotor.setPower(0.0);
+                liftMotorTracker--;
             }
 
+
             //push
-            if (gamepad2.a) {
+            if (gamepad1.a) {
                 pushServo.setPosition(0.5);
             } else {
                 pushServo.setPosition(0.0);
