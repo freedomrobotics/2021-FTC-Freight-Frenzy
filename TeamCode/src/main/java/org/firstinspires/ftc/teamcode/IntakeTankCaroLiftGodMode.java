@@ -87,7 +87,8 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
         caroMotor = hardwareMap.get(DcMotor.class, "caroMotor"); // 1
         liftMotor = hardwareMap.get(DcMotor.class, "liftMotor"); // 2
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER );
+        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -100,22 +101,15 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        //declaring extra variables
+        int liftLevel = 0;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            //double drive = -gamepad1.left_stick_y;
-            //double turn  =  gamepad1.right_stick_x;
-            //leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            //rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -124,9 +118,9 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
 
             //intake
             if (gamepad1.right_trigger != 0) {
-                intakeMotor.setPower(-1.0);
+                intakeMotor.setPower(-0.6);
             } else if (gamepad1.left_trigger != 0) {
-                intakeMotor.setPower(1.0);
+                intakeMotor.setPower(0.6);
             } else {
                 intakeMotor.setPower(0.0);
             }
@@ -141,36 +135,31 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
             }
 
             //lift
-            int liftMotorTracker = 0; //14700, 11200
-            //if at the starting position and up is pressed, goto level 2
-            if (gamepad1.dpad_up && liftMotorTracker == 0) {
-                liftMotor.setPower(1.0);
-                liftMotor.setTargetPosition(11200);
-                liftMotor.setPower(0.0);
-                liftMotorTracker++;
-            }
-            //if at level 2 and up is pressed, goto level 3
-            else if (gamepad1.dpad_up && liftMotorTracker == 1) {
-                liftMotor.setPower(1.0);
-                liftMotor.setTargetPosition(14700);
-                liftMotor.setPower(0.0);
-                liftMotorTracker++;
-            }
-            //if at 3 and down is pressed, goto level 2
-            else if (gamepad1.dpad_down && liftMotorTracker == 2) {
-                liftMotor.setPower(1.0);
-                liftMotor.setTargetPosition(11200);
-                liftMotor.setPower(0.0);
-                liftMotorTracker--;
-            }
-            //if at 2 and down is pressed, goto starting position
-            else if (gamepad1.dpad_down && liftMotorTracker == 1) {
-                liftMotor.setPower(1.0);
-                liftMotor.setTargetPosition(0);
-                liftMotor.setPower(0.0);
-                liftMotorTracker--;
-            }
 
+            if (gamepad1.dpad_up && liftLevel == 0) {
+                liftMotor.setPower(1.0);
+                liftMotor.setTargetPosition(420);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftLevel++;
+            } else if (gamepad1.dpad_up && liftLevel == 1) {
+                liftMotor.setPower(1.0);
+                liftMotor.setTargetPosition(840);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftLevel++;
+            } else if (gamepad1.dpad_down && liftLevel == 2) {
+                liftMotor.setPower(-1.0);
+                liftMotor.setTargetPosition(420);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftLevel--;
+            } else if (gamepad1.dpad_down && liftLevel == 1) {
+                liftMotor.setPower(-1.0);
+                liftMotor.setTargetPosition(0);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftLevel--;
+            } else {
+                liftMotor.setPower(0.0);
+            }
+            //8820, 6720
 
             //push
             if (gamepad1.a) {
@@ -178,7 +167,6 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
             } else {
                 pushServo.setPosition(0.0);
             }
-
 
             // Send calculated power to wheels
             leftFront.setPower(leftPower);
@@ -188,7 +176,7 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
             
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Run Time: " + runtime.toString() + " Encoder : " + liftMotor.getCurrentPosition());
             //telemetry.addData("MotorsFront", "left (%.2f), right (%.2f)", leftFront, rightFront);
             //telemetry.addData("MotorsBack", "left (%.2f), right (%.2f)", leftBack, rightBack);
             telemetry.update();
