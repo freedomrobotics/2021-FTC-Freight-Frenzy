@@ -74,15 +74,14 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        //control
+        //control hub
         leftFront  = hardwareMap.get(DcMotor.class, "leftFront"); // 0
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");// 1
         rightFront = hardwareMap.get(DcMotor.class, "rightFront"); // 2
         rightBack = hardwareMap.get(DcMotor.class, "rightBack"); // 3
-        //servos
-        pushServo = hardwareMap.get(Servo.class, "pushServo"); // 0
+        pushServo = hardwareMap.get(Servo.class, "pushServo"); // 0 (servo)
 
-        //expansion
+        //expansion hub
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor"); // 0
         caroMotor = hardwareMap.get(DcMotor.class, "caroMotor"); // 1
         liftMotor = hardwareMap.get(DcMotor.class, "liftMotor"); // 2
@@ -117,9 +116,9 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
             rightPower = -gamepad1.right_stick_y ;
 
             //intake
-            if (gamepad1.right_trigger != 0) {
+            if (gamepad1.right_trigger > 0) {
                 intakeMotor.setPower(-0.6);
-            } else if (gamepad1.left_trigger != 0) {
+            } else if (gamepad1.left_trigger > 0) {
                 intakeMotor.setPower(0.6);
             } else {
                 intakeMotor.setPower(0.0);
@@ -135,50 +134,53 @@ public class IntakeTankCaroLiftGodMode extends LinearOpMode {
             }
 
             //lift
-
-            if (gamepad1.dpad_up && liftLevel == 0) {
-                liftMotor.setPower(1.0);
-                liftMotor.setTargetPosition(420);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftLevel++;
-            } else if (gamepad1.dpad_up && liftLevel == 1) {
-                liftMotor.setPower(1.0);
-                liftMotor.setTargetPosition(840);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftLevel++;
-            } else if (gamepad1.dpad_down && liftLevel == 2) {
-                liftMotor.setPower(-1.0);
-                liftMotor.setTargetPosition(420);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftLevel--;
-            } else if (gamepad1.dpad_down && liftLevel == 1) {
-                liftMotor.setPower(-1.0);
-                liftMotor.setTargetPosition(0);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftLevel--;
-            } else {
-                liftMotor.setPower(0.0);
+            if (liftMotor.isBusy() == false){
+                if (gamepad1.dpad_up && liftLevel == 0) {
+                    liftMotor.setPower(1.0);
+                    liftMotor.setTargetPosition(1000);
+                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftLevel++;
+                } else if (gamepad1.dpad_up && liftLevel == 1) {
+                    liftMotor.setPower(1.0);
+                    liftMotor.setTargetPosition(1500);
+                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftLevel++;
+                } else if (gamepad1.dpad_down && liftLevel == 2) {
+                    liftMotor.setPower(-1.0);
+                    liftMotor.setTargetPosition(1000);
+                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftLevel--;
+                } else if (gamepad1.dpad_down && liftLevel == 1) {
+                    liftMotor.setPower(-1.0);
+                    liftMotor.setTargetPosition(0);
+                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftLevel--;
+                }
             }
-            //8820, 6720
+
 
             //push
             if (gamepad1.a) {
                 pushServo.setPosition(0.5);
             } else {
-                pushServo.setPosition(0.0);
+                pushServo.setPosition(1.0);
             }
 
             // Send calculated power to wheels
-            leftFront.setPower(leftPower);
-            leftBack.setPower(leftPower);
-            rightFront.setPower(rightPower);
-            rightBack.setPower(rightPower);
-            
+            if (gamepad1.left_stick_y != 0 || gamepad1.right_stick_y != 0){
+                leftFront.setPower(leftPower);
+                leftBack.setPower(leftPower);
+                rightFront.setPower(rightPower);
+                rightBack.setPower(rightPower);
+            } else {
+                leftFront.setPower(0.0);
+                leftBack.setPower(0.0);
+                rightFront.setPower(0.0);
+                rightBack.setPower(0.0);
+            }
 
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString() + " Encoder : " + liftMotor.getCurrentPosition());
-            //telemetry.addData("MotorsFront", "left (%.2f), right (%.2f)", leftFront, rightFront);
-            //telemetry.addData("MotorsBack", "left (%.2f), right (%.2f)", leftBack, rightBack);
+            // Show the elapsed game time + extras INCORRECTLY :D
+            telemetry.addData("Status", "\nRun Time: " + runtime.toString() + "\nLift Encoder : " + liftMotor.getCurrentPosition());
             telemetry.update();
         }
     }
