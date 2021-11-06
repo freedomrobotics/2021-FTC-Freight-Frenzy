@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="CoopFinal", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class CoopFinal extends LinearOpMode {
 
     // Declare OpMode members.
@@ -116,10 +116,14 @@ public class CoopFinal extends LinearOpMode {
             rightPower = -gamepad1.right_stick_y ;
 
             //intake
-            if (gamepad2.right_trigger > 0) {
-                intakeMotor.setPower(-0.6);
-            } else if (gamepad2.left_trigger > 0) {
-                intakeMotor.setPower(0.6);
+            if (gamepad2.right_trigger > 0 && gamepad2.b == true) {
+                intakeMotor.setPower(-1.0);
+            } else if (gamepad2.left_trigger > 0 && gamepad2.b == true) {
+                intakeMotor.setPower(1.0);
+            } else if (gamepad2.right_trigger > 0 && gamepad2.b != true) {
+                intakeMotor.setPower(-0.5);
+            } else if (gamepad2.left_trigger > 0 && gamepad2.b != true) {
+                intakeMotor.setPower(0.5);
             } else {
                 intakeMotor.setPower(0.0);
             }
@@ -134,52 +138,31 @@ public class CoopFinal extends LinearOpMode {
             }
 
             //lift
-            if (liftMotor.isBusy() == false){
-                if (gamepad1.dpad_up && liftLevel == 0) {
+            if (liftMotor.isBusy() == false) {
+                if (gamepad1.dpad_down) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(3500);
+                    liftMotor.setTargetPosition(-250);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel++;
-                } else if (gamepad1.dpad_up && liftLevel == 1) {
+                } else if (gamepad1.dpad_left) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(5250);
+                    liftMotor.setTargetPosition(3400);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel++;
-                } else if (gamepad1.dpad_up && liftLevel == 2) {
+                } else if (gamepad1.dpad_right) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(6750);
+                    liftMotor.setTargetPosition(5150);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel++;
-                } else if (gamepad1.dpad_down && liftLevel == 3) {
-                    liftMotor.setPower(-1.0);
-                    liftMotor.setTargetPosition(5250);
+                } else if (gamepad1.dpad_up) {
+                    liftMotor.setPower(1.0);
+                    liftMotor.setTargetPosition(6650);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel--;
-                } else if (gamepad1.dpad_down && liftLevel == 2) {
-                    liftMotor.setPower(-1.0);
-                    liftMotor.setTargetPosition(3500);
-                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel--;
-                } else if (gamepad1.dpad_down && liftLevel == 1) {
-                    liftMotor.setPower(-1.0);
-                    liftMotor.setTargetPosition(0);
-                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel--;
                 }
-            } //resets lift just incase
-            if (gamepad1.ps) {
-                liftMotor.setPower(-1.0);
-                liftMotor.setTargetPosition(0);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftLevel = 0;
             }
-
 
             //push
             if (gamepad2.a) {
                 pushServo.setPosition(0.5);
             } else {
-                pushServo.setPosition(1.0);
+                pushServo.setPosition(0.95);
             }
 
             // Send calculated power to wheels

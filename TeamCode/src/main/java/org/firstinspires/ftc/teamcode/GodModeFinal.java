@@ -101,7 +101,7 @@ public class GodModeFinal extends LinearOpMode {
         runtime.reset();
 
         //declaring extra variables
-        int liftLevel = 0;
+        //int liftLevel = 0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -116,10 +116,14 @@ public class GodModeFinal extends LinearOpMode {
             rightPower = -gamepad1.right_stick_y ;
 
             //intake
-            if (gamepad1.right_trigger > 0) {
-                intakeMotor.setPower(-0.6);
-            } else if (gamepad1.left_trigger > 0) {
-                intakeMotor.setPower(0.6);
+            if (gamepad1.right_trigger > 0 && gamepad1.b == true) {
+                intakeMotor.setPower(-1.0);
+            } else if (gamepad1.left_trigger > 0 && gamepad1.b == true) {
+                intakeMotor.setPower(1.0);
+            } else if (gamepad1.right_trigger > 0 && gamepad1.b != true) {
+                intakeMotor.setPower(-0.5);
+            } else if (gamepad1.left_trigger > 0 && gamepad1.b != true) {
+                intakeMotor.setPower(0.5);
             } else {
                 intakeMotor.setPower(0.0);
             }
@@ -133,57 +137,33 @@ public class GodModeFinal extends LinearOpMode {
                 caroMotor.setPower(0.0);
             }
 
-            //lift
-            if (liftMotor.isBusy() == false){
-                if (gamepad1.dpad_up && liftLevel == 0) {
+            if (liftMotor.isBusy() == false) {
+                if (gamepad1.dpad_down) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(3500);
+                    liftMotor.setTargetPosition(-250);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel++;
-                } else if (gamepad1.dpad_up && liftLevel == 1) {
+                } else if (gamepad1.dpad_left){
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(5250);
+                    liftMotor.setTargetPosition(3350);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel++;
-                } else if (gamepad1.dpad_up && liftLevel == 2) {
+                } else if (gamepad1.dpad_right) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(6750);
+                    liftMotor.setTargetPosition(5100);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel++;
-                } else if (gamepad1.dpad_down && liftLevel == 3) {
-                    liftMotor.setPower(-1.0);
-                    liftMotor.setTargetPosition(5250);
+                } else if (gamepad1.dpad_up) {
+                    liftMotor.setPower(1.0);
+                    liftMotor.setTargetPosition(6450);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel--;
-                } else if (gamepad1.dpad_down && liftLevel == 2) {
-                    liftMotor.setPower(-1.0);
-                    liftMotor.setTargetPosition(3500);
-                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel--;
-                } else if (gamepad1.dpad_down && liftLevel == 1) {
-                    liftMotor.setPower(-1.0);
-                    liftMotor.setTargetPosition(0);
-                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    liftLevel--;
                 }
             }
-            if (gamepad1.ps) { //resets lift just incase
-                if (liftMotor.getCurrentPosition() > 0) {
-                    liftMotor.setPower(-1.0);
-                } else {
-                    liftMotor.setPower(1.0);
-                }
-                liftMotor.setTargetPosition(0);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftLevel = 0;
-            }
+
 
 
             //push
             if (gamepad1.a) {
                 pushServo.setPosition(0.5);
             } else {
-                pushServo.setPosition(1.0);
+                pushServo.setPosition(0.95);
             }
 
             // Send calculated power to wheels
