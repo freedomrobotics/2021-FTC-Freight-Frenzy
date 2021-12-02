@@ -74,8 +74,8 @@ public class AutoFinal extends LinearOpMode {
     private DcMotor liftMotor = null;
     private Servo pushServo = null;
 
-    static final double     LEFT_FORWARD_SPEED = 0.775;
-    static final double     RIGHT_FORWARD_SPEED = 0.6;
+    static final double     LEFT_FORWARD_SPEED = 0.55;
+    static final double     RIGHT_FORWARD_SPEED = 0.475;
 
     @Override
     public void runOpMode() {
@@ -115,13 +115,13 @@ public class AutoFinal extends LinearOpMode {
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        // Step 1: Forward for 0.875 second
+        // Step 1: Forward for 1 second
         leftFront.setPower(LEFT_FORWARD_SPEED);
         leftBack.setPower(LEFT_FORWARD_SPEED);
         rightFront.setPower(RIGHT_FORWARD_SPEED);
         rightBack.setPower(RIGHT_FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.875)) {
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -130,10 +130,10 @@ public class AutoFinal extends LinearOpMode {
         rightFront.setPower(0);
         rightBack.setPower(0);
 
-        // Step 2: Carousel for 5 second
-        caroMotor.setPower(-1);
+        // Step 2: Carousel for 4 second
+        caroMotor.setPower(0.3);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 5.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -143,13 +143,13 @@ public class AutoFinal extends LinearOpMode {
         rightFront.setPower(0);
         rightBack.setPower(0);
 
-        // Step 3: Turns for 0.5 secomns
+        // Step 3: Backwards for 1.5 seconds
         leftFront.setPower(-LEFT_FORWARD_SPEED);
         leftBack.setPower(-LEFT_FORWARD_SPEED);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
+        rightFront.setPower(-RIGHT_FORWARD_SPEED);
+        rightBack.setPower(-RIGHT_FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -158,43 +158,13 @@ public class AutoFinal extends LinearOpMode {
         rightFront.setPower(0);
         rightBack.setPower(0);
 
-        // Step 4: Backwards for 1.25 seconds
+        //Step 4: Backwards for 2 second
         leftFront.setPower(-LEFT_FORWARD_SPEED);
         leftBack.setPower(-LEFT_FORWARD_SPEED);
         rightFront.setPower(-RIGHT_FORWARD_SPEED);
         rightBack.setPower(-RIGHT_FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.25)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
-
-        // Step 5: Turns for 0;5 seconds
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(-RIGHT_FORWARD_SPEED);
-        rightBack.setPower(-RIGHT_FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
-
-        //Step 6: Backwards for 1 second
-        leftFront.setPower(-LEFT_FORWARD_SPEED);
-        leftBack.setPower(-LEFT_FORWARD_SPEED);
-        rightFront.setPower(-RIGHT_FORWARD_SPEED);
-        rightBack.setPower(-RIGHT_FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }

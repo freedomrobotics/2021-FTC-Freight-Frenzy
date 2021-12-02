@@ -100,11 +100,8 @@ public class CoopFinal extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //declaring extra variables
-        int liftLevel = 0;
-
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        while (opModeIsActive() && runtime.seconds() < 120) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
@@ -116,23 +113,23 @@ public class CoopFinal extends LinearOpMode {
             rightPower = -gamepad1.right_stick_y ;
 
             //intake
-            if (gamepad2.right_trigger > 0 && gamepad2.b == true) {
+            if (gamepad2.right_trigger > 0) {
                 intakeMotor.setPower(-1.0);
-            } else if (gamepad2.left_trigger > 0 && gamepad2.b == true) {
+            } else if (gamepad2.left_trigger > 0) {
                 intakeMotor.setPower(1.0);
-            } else if (gamepad2.right_trigger > 0 && gamepad2.b != true) {
-                intakeMotor.setPower(-0.5);
-            } else if (gamepad2.left_trigger > 0 && gamepad2.b != true) {
-                intakeMotor.setPower(0.5);
+            } else if (gamepad2.right_trigger > 0 && gamepad2.b) {
+                intakeMotor.setPower(0.75);
+            } else if (gamepad2.left_trigger > 0 && gamepad2.b) {
+                intakeMotor.setPower(-0.75);
             } else {
                 intakeMotor.setPower(0.0);
             }
 
             //carousel
             if (gamepad2.right_bumper) {
-                caroMotor.setPower(-1.0);
+                caroMotor.setPower(0.5);
             } else if (gamepad2.left_bumper) {
-                caroMotor.setPower(1.0);
+                caroMotor.setPower(-0.5);
             } else {
                 caroMotor.setPower(0.0);
             }
@@ -141,7 +138,7 @@ public class CoopFinal extends LinearOpMode {
             if (liftMotor.isBusy() == false) {
                 if (gamepad1.dpad_down) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(-250);
+                    liftMotor.setTargetPosition(0);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 } else if (gamepad1.dpad_left) {
                     liftMotor.setPower(1.0);

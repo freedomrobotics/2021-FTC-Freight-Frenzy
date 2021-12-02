@@ -100,11 +100,11 @@ public class GodModeFinal extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //declaring extra variables
-        //int liftLevel = 0;
+        //sets up extra variabes
+        boolean liftTop = false;
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        while (opModeIsActive() && runtime.seconds() < 120) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
@@ -116,23 +116,23 @@ public class GodModeFinal extends LinearOpMode {
             rightPower = -gamepad1.right_stick_y ;
 
             //intake
-            if (gamepad1.right_trigger > 0 && gamepad1.b == true) {
+            if (gamepad1.right_trigger > 0) {
                 intakeMotor.setPower(-1.0);
-            } else if (gamepad1.left_trigger > 0 && gamepad1.b == true) {
+            } else if (gamepad1.left_trigger > 0) {
                 intakeMotor.setPower(1.0);
-            } else if (gamepad1.right_trigger > 0 && gamepad1.b != true) {
-                intakeMotor.setPower(-0.5);
-            } else if (gamepad1.left_trigger > 0 && gamepad1.b != true) {
-                intakeMotor.setPower(0.5);
+            } else if (gamepad1.right_trigger > 0 && gamepad1.b) {
+                intakeMotor.setPower(0.75);
+            } else if (gamepad1.left_trigger > 0 && gamepad1.b) {
+                intakeMotor.setPower(-0.75);
             } else {
                 intakeMotor.setPower(0.0);
             }
 
             //carousel
             if (gamepad1.right_bumper) {
-                caroMotor.setPower(-1.0);
+                caroMotor.setPower(0.5);
             } else if (gamepad1.left_bumper) {
-                caroMotor.setPower(1.0);
+                caroMotor.setPower(-0.5);
             } else {
                 caroMotor.setPower(0.0);
             }
@@ -140,20 +140,24 @@ public class GodModeFinal extends LinearOpMode {
             if (liftMotor.isBusy() == false) {
                 if (gamepad1.dpad_down) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(-250);
+                    liftMotor.setTargetPosition(0);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftTop = false;
                 } else if (gamepad1.dpad_left){
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(3350);
+                    liftMotor.setTargetPosition(3450);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftTop = false;
                 } else if (gamepad1.dpad_right) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(5100);
+                    liftMotor.setTargetPosition(5150);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                } else if (gamepad1.dpad_up) {
+                    liftTop = false;
+                } else if (gamepad1.dpad_up && !liftTop) {
                     liftMotor.setPower(1.0);
-                    liftMotor.setTargetPosition(6450);
+                    liftMotor.setTargetPosition(6650);
                     liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftTop = true;
                 }
             }
 
